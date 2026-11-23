@@ -1,0 +1,63 @@
+name: Monthly Model Retrain
+
+# Rebuilds the zones from the latest dataset, retrains every model, and commits
+# the new model, results and README results table.
+
+on:
+  schedule:
+    # 05:00 UTC on the 1st of each month, after the daily data updates
+    - cron: '0 5 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forecast-repo-commits  # never overlaps with the daily data refresh
+  cancel-in-progress: false
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v5
+
+      - name: Checkout dataset
+        uses: actions/checkout@v5
+        with:
+          repository: th33k/dataset-sri-lanka-air-quality
+          path: dataset  # public repo, no token needed
+          sparse-checkout: data/processed
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install system and Python dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y libgomp1
+          pip install -r requirements.txt
+
+      - name: Rebuild zones from the latest data
+        run: python -m src.prepare_data dataset/data/processed --rezone
+
+      - name: Retrain all models
+        run: python -m src.train
+
+      - name: Commit and push the new model and results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ models/ results/ README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(model): monthly retrain $(date -u +%Y-%m-%d) [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
