@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.env
+catboost_info/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Local/CI copies of the source dataset (read from dataset-sri-lanka-air-quality)
+data/raw/
+dataset/

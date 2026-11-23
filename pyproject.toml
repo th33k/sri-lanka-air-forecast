@@ -1,0 +1,28 @@
+[project]
+name = "sri-lanka-air-quality-forecast"
+version = "0.1.0"
+description = "Sri Lanka air quality ensemble forecasting framework"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "catboost>=1.2.10",
+    "joblib>=1.6.0",
+    "lightgbm>=4.7.0",
+    "numpy>=2.0.0",
+    "pandas>=2.2.0",
+    "plotly>=6.0.0",
+    "pyarrow>=14.0.0",
+    "scikit-learn>=1.5.0",
+    "scipy>=1.14.0",
+    "statsmodels>=0.14.0",
+    "streamlit>=1.67.0",
+    "xgboost>=2.1.0",
+]
+
+[dependency-groups]
+notebook = [
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "nbconvert>=7.17.2",
+    "nbformat>=5.11.1",
+]
