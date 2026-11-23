@@ -1,0 +1,10 @@
+{
+  "best_model": "Stacking (RF+XGB+LGBM+Cat)",
+  "day2": {
+    "RMSE": 13.993,
+    "MAE": 10.211,
+    "R2": 0.553,
+    "persistence_RMSE": 16.942,
+    "n_test": 19928
+  }
+}
