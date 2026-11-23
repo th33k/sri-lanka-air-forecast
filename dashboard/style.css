@@ -1,0 +1,78 @@
+/* Dashboard styles: small, quiet tweaks on top of Streamlit's own layout.
+   Avoid fixed heights here so inputs and buttons keep Streamlit's sizing and line up. */
+
+/* Page width and space for Streamlit's top toolbar */
+.block-container {
+    padding-top: 1.4rem !important;
+    padding-bottom: 1.5rem !important;
+    padding-left: clamp(0.8rem, 1.8vw, 2rem) !important;
+    padding-right: clamp(0.8rem, 1.8vw, 2rem) !important;
+    max-width: 100% !important;
+}
+
+/* Metric cards: light card, readable label (no forced capitals, so µg/m³ stays µg/m³) */
+[data-testid="stMetric"] {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px !important;
+    min-width: 0 !important;
+}
+[data-testid="stMetricLabel"] p {
+    font-size: 0.74rem !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+[data-testid="stMetricValue"] div {
+    font-size: clamp(1.1rem, 1.3vw, 1.4rem) !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+}
+[data-testid="stMetricDelta"] div {
+    font-size: 0.74rem !important;
+}
+
+/* Tabs: a little bolder, with the brand colour on the active one */
+[role="tab"] p {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+}
+
+/* Buttons: brand colour on hover */
+.stButton > button:hover:enabled {
+    border-color: #1b9e77;
+    color: #1b9e77;
+}
+
+/* Sidebar is not used */
+[data-testid="stSidebar"],
+[data-testid="collapsedControl"] {
+    display: none !important;
+}
+
+/* Captions and dividers */
+[data-testid="stCaptionContainer"] {
+    color: #64748b;
+}
+hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 0.4rem 0 !important;
+}
+
+/* Keep content fully visible while Streamlit re-runs (no white fade) */
+[data-stale="true"], .stale-element {
+    opacity: 1 !important;
+    transition: none !important;
+}
+
+/* Header: normal page flow; Streamlit's top bar is see-through so its buttons float on the right */
+[data-testid="stHeader"] { background: transparent; }
+.app-topbar { padding: 0 220px 0.4rem 0; }
+.app-line2 { display: flex; align-items: center; gap: 10px; }
+.app-title { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: #0f172a; line-height: 1.25; }
+.app-sub { font-size: 0.9rem; color: #64748b; }
+@media (max-width: 700px) { .app-topbar { padding-right: 0; } .app-sub { display: none; } }
