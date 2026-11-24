@@ -8,23 +8,23 @@ import streamlit as st
 from src.data import FEATURES, MODELS_DIR, RESULTS_DIR, add_features, load_dsds, load_zones
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_zones():
     return load_zones()
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_dsds():
     return load_dsds()
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_dsd_daily():
     """Maps zone-level time series onto Divisional Secretariat Division boundaries."""
     return get_dsds().merge(get_zones().drop(columns=["lat", "lon"]), on="zone")
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_results():
     """Loads benchmark metrics, hold-out predictions, importance rankings, and metadata."""
     m_path = RESULTS_DIR / "metrics.csv"
@@ -52,7 +52,7 @@ def has_day2_model() -> bool:
     return (MODELS_DIR / "best_tomorrow.joblib").exists()
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_horizon_scores():
     """Hold-out RMSE/R2 per horizon, from results/best.json and metrics.csv."""
     best = json.load(open(RESULTS_DIR / "best.json", encoding="utf-8"))
@@ -61,13 +61,13 @@ def get_horizon_scores():
     return {1: day1, 2: best.get("day2", {})}
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_featured_zones():
     """Computes and caches zone-level feature matrices."""
     return add_features(get_zones())
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_forecast_for_date(selected_date=None, horizon: int = 1):
     """Forecast AQI `horizon` days after an observation date (t), for every DSD.
 
@@ -108,7 +108,7 @@ def get_forecast_for_date(selected_date=None, horizon: int = 1):
 
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def key_dates(cutoff=None):
     """Notable days computed from the data, so they stay correct as new data arrives."""
     z = get_zones()
@@ -125,7 +125,7 @@ def key_dates(cutoff=None):
     return dates
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)  # re-read data hourly
 def get_district_daily():
     """District daily means (one row per district per day): ~14x smaller than the DSD table."""
     cols = ["aqi", "aqi_max", "pm25", "pm10", "no2", "so2", "o3", "co", "aod", "dust", "uv_max"]
